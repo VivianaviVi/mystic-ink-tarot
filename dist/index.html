@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mystic Ink Tarot</title>
+    <!-- Tailwind via CDN for simplicity in this setup -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['Cinzel', 'serif'],
+              sans: ['Lato', 'sans-serif'],
+            },
+            colors: {
+              mystic: {
+                950: '#130424', // Deep Imperial Purple (Base)
+                900: '#2a0a4a', // Vibrant Deep Violet
+                800: '#321054', // Borders/Accents
+                700: '#4c1d7a',
+                gold: '#FFD700', // True Bright Gold (Vibrant)
+                goldDim: '#FFC82E', // Rich Gold
+                goldLight: '#FFF8D6', // Pale Gold Highlight
+                accent: '#9D4EDD', // Electric Purple
+              }
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'float-subtle': 'floatSubtle 8s ease-in-out infinite',
+              'float-card': 'floatCard 4s ease-in-out infinite',
+              'shimmer': 'shimmer 2.5s linear infinite',
+              'fade-in': 'fadeIn 1s ease-out forwards',
+              'flip': 'flipCard 1s ease-out forwards',
+              'flip-reversed': 'flipCardReversed 1s ease-out forwards',
+              'particle-burst': 'particleBurst 1.5s ease-out forwards',
+              'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+              'card-reveal': 'cardReveal 0.8s ease-out forwards',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              floatSubtle: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-5px)' },
+              },
+              floatCard: {
+                '0%, 100%': { transform: 'translateY(0) rotateX(0deg)' },
+                '50%': { transform: 'translateY(-8px) rotateX(2deg)' },
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              flipCard: {
+                '0%': { transform: 'rotateY(0deg) scale(1)' },
+                '50%': { transform: 'rotateY(90deg) scale(1.1)' },
+                '100%': { transform: 'rotateY(180deg) scale(1)' },
+              },
+              flipCardReversed: {
+                '0%': { transform: 'rotateY(0deg) scale(1)' },
+                '50%': { transform: 'rotateY(90deg) scale(1.1)' },
+                '100%': { transform: 'rotateY(180deg) rotateZ(180deg) scale(1)' },
+              },
+              particleBurst: {
+                '0%': { 
+                  transform: 'translate(0, 0) rotate(0deg) scale(1)',
+                  opacity: '1',
+                },
+                '100%': { 
+                  transform: 'translate(calc(cos(var(--angle)) * var(--speed)), calc(sin(var(--angle)) * var(--speed))) rotate(var(--rotation)) scale(0)',
+                  opacity: '0',
+                },
+              },
+              glowPulse: {
+                '0%, 100%': { boxShadow: '0 0 20px rgba(255, 215, 0, 0.3)' },
+                '50%': { boxShadow: '0 0 40px rgba(255, 215, 0, 0.6)' },
+              },
+              cardReveal: {
+                '0%': { opacity: '0', transform: 'scale(0.8) rotateY(-30deg)' },
+                '100%': { opacity: '1', transform: 'scale(1) rotateY(0deg)' },
+              },
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Theme CSS Variables - Default Purple */
+      :root {
+        --theme-gold: #FFD700;
+        --theme-gold-dim: #D4AF37;
+        --theme-accent: #9333ea;
+        --theme-secondary: #9333ea;
+        --theme-bg: #130424;
+        --theme-bg-light: #2a0a4a;
+        --theme-bg-lighter: #321054;
+        --theme-border: #FFD700;
+        --theme-text: #e2d9f3;
+        --theme-text-dim: #b8a5d4;
+      }
+
+      body {
+        background-color: var(--theme-bg);
+        color: var(--theme-text);
+        overflow-x: hidden;
+      }
+      
+      /* Custom Scrollbar - Theme aware */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--theme-bg); 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--theme-bg-lighter); 
+        border-radius: 4px;
+        border: 1px solid var(--theme-bg-light);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--theme-gold); 
+      }
+
+      /* Theme-aware utility classes */
+      .theme-gold { color: var(--theme-gold) !important; }
+      .theme-border { border-color: var(--theme-gold) !important; }
+      .theme-bg { background-color: var(--theme-bg-light) !important; }
+      .theme-glow { box-shadow: 0 0 20px color-mix(in srgb, var(--theme-gold) 30%, transparent) !important; }
+    </style>
+
+<link rel="stylesheet" href="/index.css">
+    <!-- ML5.js for Hand Pose Detection -->
+    <script src="https://unpkg.com/ml5@1/dist/ml5.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/assets/index-C-AdAn67.js"></script>
+</head>
+  <body>
+    <div id="root"></div>
+</body>
+</html>
